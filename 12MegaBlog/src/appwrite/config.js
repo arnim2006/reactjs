@@ -1,21 +1,28 @@
-import conf from '../conf/conf.js'
-import { Client, ID ,Databases,Storage,Query} from 'appwrite';
+import conf from '../conf/conf.js'     //  Imports the conf object, which holds your Appwrite configuration details (URL, project ID, database ID, collection ID, bucket ID) that are pulled from your .env file.
+import { Client, ID ,Databases,Storage,Query} from 'appwrite';     
+// Imports necessary components from the Appwrite SDK:
+// Client: To initialize and configure the Appwrite SDK connection.
+// ID: To generate unique IDs for documents and files.
+// Databases: The class for interacting with Appwrite's database services (creating, reading, updating, deleting documents).
+// Storage: The class for interacting with Appwrite's file storage services (uploading, deleting, previewing files).
+// Query: Used to build powerful queries for fetching documents (e.g., filtering posts by status).
 
-export class Service{
-    client = new Client();
-    databases;
-    bucket;
+export class Service{  // Defines a new JavaScript class named Service and exports it, making it available for use in other parts of your application.
+    client = new Client(); // Declares and initializes an instance variable client with a new Appwrite Client object. This client instance will handle the connection to your Appwrite backend, similar to what you saw in AuthService.
+    databases;         // Declares an instance variable databases. This will hold an instance of Appwrite's Databases service, initialized in the constructor.
+    bucket;            // Declares an instance variable bucket. This will hold an instance of Appwrite's Storage (often called "bucket" in storage contexts) service, initialized in the constructor.
+
     // This is the constructor function that runs when you create a new instance of Service.
     constructor() {
-        this.client
-            .setEndpoint(conf.appwriteUrl)
+        this.client    // Initializes the client instance with the Appwrite endpoint and project ID from the conf object.
+            .setEndpoint(conf.appwriteUrl)     // 
             .setProject(conf.appwriteProjectId);
         this.databases = new Databases(this.client);
         this.bucket = new Storage(this.client);
     }
 
     async createPost({title , slug , content , featuredImage, status, userId}){
- 
+
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
